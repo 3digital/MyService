@@ -42,6 +42,15 @@ public class MyService extends Service {
 
     @Override
     public void onCreate() {
+
+        HandlerThread handlerThread = new HandlerThread("myThread", Thread.MIN_PRIORITY);
+        handlerThread.start();
+        mServiceLooper = handlerThread.getLooper();
+        mServiceHandler = new ServiceHandler(mServiceLooper);
+
+
+
+
         // Start up the thread running the service.  Note that we create a
         // separate thread because the service normally runs in the process's
         // main thread, which we don't want to block.  We also make it
@@ -59,6 +68,11 @@ public class MyService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Toast.makeText(this, "service starting", Toast.LENGTH_SHORT).show();
+
+        Message message = mServiceHandler.obtainMessage();
+        message.arg1 = startId;
+        mServiceHandler.sendMessage(message);
+
 
         /*
         * todo:
