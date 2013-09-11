@@ -16,13 +16,20 @@ public class MyService extends Service {
     private Looper mServiceLooper;
     private ServiceHandler mServiceHandler;
 
+
     // Handler that receives messages from the thread
     private final class ServiceHandler extends Handler {
         public ServiceHandler(Looper looper) {
             super(looper);
+
+
         }
         @Override
         public void handleMessage(Message msg) {
+
+
+
+
             // Normally we would do some work here, like download a file.
             // For our sample, we just sleep for 5 seconds.
             long endTime = System.currentTimeMillis() + 5*1000;
@@ -34,6 +41,7 @@ public class MyService extends Service {
                     }
                 }
             }
+
             // Stop the service using the startId, so that we don't stop
             // the service in the middle of handling another job
             stopSelf(msg.arg1);
@@ -47,6 +55,8 @@ public class MyService extends Service {
         handlerThread.start();
         mServiceLooper = handlerThread.getLooper();
         mServiceHandler = new ServiceHandler(mServiceLooper);
+
+
 
 
 
@@ -69,9 +79,15 @@ public class MyService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         Toast.makeText(this, "service starting", Toast.LENGTH_SHORT).show();
 
+
+
+
         Message message = mServiceHandler.obtainMessage();
         message.arg1 = startId;
         mServiceHandler.sendMessage(message);
+
+
+
 
 
         /*
