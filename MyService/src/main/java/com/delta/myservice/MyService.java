@@ -15,6 +15,11 @@ import android.widget.Toast;
 public class MyService extends Service {
     private Looper mServiceLooper;
     private ServiceHandler mServiceHandler;
+    private Intent intent;
+
+    public Intent getIntent() {
+        return intent;
+    }
 
 
     // Handler that receives messages from the thread
@@ -27,20 +32,23 @@ public class MyService extends Service {
         @Override
         public void handleMessage(Message msg) {
 
+            Intent intent = new Intent();
+            intent.setAction("digital");
+            intent.putExtra("digital", "Hey man i got this");
+            sendBroadcast(intent);
 
 
-
-            // Normally we would do some work here, like download a file.
-            // For our sample, we just sleep for 5 seconds.
-            long endTime = System.currentTimeMillis() + 5*1000;
-            while (System.currentTimeMillis() < endTime) {
-                synchronized (this) {
-                    try {
-                        wait(endTime - System.currentTimeMillis());
-                    } catch (Exception e) {
-                    }
-                }
-            }
+//            // Normally we would do some work here, like download a file.
+//            // For our sample, we just sleep for 5 seconds.
+//            long endTime = System.currentTimeMillis() + 5*1000;
+//            while (System.currentTimeMillis() < endTime) {
+//                synchronized (this) {
+//                    try {
+//                        wait(endTime - System.currentTimeMillis());
+//                    } catch (Exception e) {
+//                    }
+//                }
+//            }
 
             // Stop the service using the startId, so that we don't stop
             // the service in the middle of handling another job
@@ -55,8 +63,6 @@ public class MyService extends Service {
         handlerThread.start();
         mServiceLooper = handlerThread.getLooper();
         mServiceHandler = new ServiceHandler(mServiceLooper);
-
-
 
 
 
@@ -78,9 +84,6 @@ public class MyService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Toast.makeText(this, "service starting", Toast.LENGTH_SHORT).show();
-
-
-
 
         Message message = mServiceHandler.obtainMessage();
         message.arg1 = startId;
